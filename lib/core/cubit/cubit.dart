@@ -11,15 +11,6 @@ class States{
     required this.counter,
     required this.color,
 });
-
-  States custom({
-      String? text,
-     int? count,
-     Color? colors,
-}){
-    return States(name: text ?? this.name, counter: count ?? this.counter, color: colors ?? this.color);
-  }
-
 }
 
 
@@ -27,10 +18,10 @@ class AppCubit extends Cubit<States>{
 
   AppCubit():super(States(name: 'Hamad', counter: 0, color: AppColors.deepOrange));
   void changeState(){
-    emit(state.custom(
-      text: state.name == 'Hamad' ? 'Mohamed':'Hamad',
-      count: state.counter + 1 ,
-      colors: state.color == AppColors.deepOrange ? AppColors.amber : AppColors.deepOrange,
+    emit(States(
+      name: state.name == 'Hamad' ? 'Mohamed':'Hamad',
+      counter: state.counter + 1 ,
+      color: state.color == AppColors.deepOrange ? AppColors.amber : AppColors.deepOrange,
     ));
   }
   void reset(){
