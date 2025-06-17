@@ -1,64 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:tasks/core/cubit/cubit.dart';
+import 'package:tasks/core/cubit/states.dart';
 import 'package:tasks/core/style/colors.dart';
+import 'package:tasks/core/style/images.dart';
 import 'package:tasks/core/style/text_style.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tasks/features/home/view/widgets/app_bar.dart';
+import 'package:tasks/features/home/view/widgets/circle_wallpaper.dart';
+import 'package:tasks/features/home/view/widgets/drop_form.dart';
+import 'package:tasks/features/home/view/widgets/home_body.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-
+  HomeScreen({super.key});
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AppCubit,States>(
-      builder: (context,state){
+    return BlocConsumer<AppCubit, AppStates>(
+      listener: (context, state) {
+        if (state is ChangeImage) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Wallpaper changed successfully')),
+          );
+        } else if (state is ChangeTitle) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('تم تغيير الذكر')));
+        }
+      },
+      builder: (context, state) {
         AppCubit cubit = context.read();
         return Scaffold(
-          appBar: AppBar(),
-          body: SizedBox(
-            width: double.infinity,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              spacing: 20,
-              children: [
-                Container(
-                  height: 150,
-                  width: 150,
-                  decoration: BoxDecoration(
-                      color: cubit.state.color,
-                      borderRadius: BorderRadius.circular(25)
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(cubit.state.name,
-                        style: titleStyle(),
-                      ),
-                      Text(cubit.state.counter.toString(),
-                        style: titleStyle(),
-                      ),
-                    ],
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: (){
-                  cubit.changeState();
-                },
-                  child: Text('Change State ',
-                  style: titleStyle(),
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: (){
-                    cubit.reset();
-                  },
-                  child: Text('reset',
-                    style: titleStyle(),
-                  ),
-                ),
-
-              ],
-            ),
-          ),
+          appBar: appBarHome(context),
+          body: HomeBody(),
         );
       },
     );
